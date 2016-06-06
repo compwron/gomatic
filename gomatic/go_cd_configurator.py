@@ -222,11 +222,11 @@ class HostRestClient(object):
         return (self.__username, self.__password) if self.__username or self.__password else None
 
     def get(self, path):
-        return requests.get(self.__path(path), auth=self.__auth())
+        return requests.get(self.__path(path), auth=self.__auth(), verify=False)
 
     def post(self, path, data):
         url = self.__path(path)
-        result = requests.post(url, data, auth=self.__auth())
+        result = requests.post(url, data, auth=self.__auth(), verify=False)
         if result.status_code != 200:
             try:
                 result_json = json.loads(result.text.replace("\\'", "'"))
