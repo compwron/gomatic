@@ -110,3 +110,21 @@ class ThingWithEnvironmentVariables(object):
             del env_vars[name]
         self.ensure_environment_variables(env_vars)
         self.ensure_encrypted_environment_variables(encrypted_env_vars)
+
+
+class ThingWithAuthorizedRoles(object):
+    def __init__(self, element):
+        self.element = element
+
+    @property
+    def roles(self):
+        guarded_element = PossiblyMissingElement(self.element)
+        if guarded_element.possibly_missing_child('approval').has_attribute('type', 'manual'):
+            return set([e.text for e in guarded_element.possibly_missing_child('approval').possibly_missing_child('authorization').findall('role')])
+        else:
+            return None
+
+    def ensure_role(self, role):
+        if role not in self.roles:
+            Ensurance(self.element).ensure_child('approval').ensure_child('authorization') \
+                .append(ET.fromstring('<role>%s</role>' % role))
