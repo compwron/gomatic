@@ -35,7 +35,11 @@
         </jobs>
       </stage>
       <stage name="deploy">
-        <approval type="manual" />
+        <approval type="manual">
+          <authorization>
+            <role>some_role</role>
+          </authorization>
+        </approval>
         <environmentvariables>
           <variable name="BASE_URL">
             <value>http://myurl</value>

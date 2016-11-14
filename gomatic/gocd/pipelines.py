@@ -1,6 +1,6 @@
 from xml.etree import ElementTree as ET
 from gomatic.gocd.artifacts import Artifact
-from gomatic.gocd.generic import ThingWithResources, ThingWithEnvironmentVariables
+from gomatic.gocd.generic import ThingWithResources, ThingWithEnvironmentVariables, ThingWithAuthorizedRoles
 from gomatic.gocd.materials import Materials, GitMaterial
 from gomatic.gocd.tasks import Task
 from gomatic.mixins import CommonEqualityMixin
@@ -232,6 +232,16 @@ class Stage(CommonEqualityMixin):
     @property
     def has_manual_approval(self):
         return PossiblyMissingElement(self.element).possibly_missing_child("approval").has_attribute("type", "manual")
+
+    @property
+    def authorized_roles(self):
+        return self.__thing_with_authorized_roles().roles
+
+    def ensure_authorized_role(self, role):
+        return self.__thing_with_authorized_roles().ensure_role(role)
+
+    def __thing_with_authorized_roles(self):
+        return ThingWithAuthorizedRoles(self.element)
 
     @property
     def fetch_materials(self):
