@@ -506,6 +506,17 @@ class TestStages(unittest.TestCase):
         stage.ensure_authorized_role(role)
         self.assertEquals(stage.authorized_roles, {'some_role', role})
 
+    def test_can_have_authorized_users(self):
+        stage = typical_pipeline().stages[1]
+        user = 'some_user'
+        self.assertEquals(stage.authorized_users, {user})
+
+    def test_can_ensure_new_user(self):
+        stage = typical_pipeline().stages[1]
+        user = 'some_new_user'
+        stage.ensure_authorized_user(user)
+        self.assertEquals(stage.authorized_users, {'some_user', user})
+
     def test_stages_have_fetch_materials_flag(self):
         stage = typical_pipeline().ensure_stage("build")
         self.assertEquals(True, stage.fetch_materials)

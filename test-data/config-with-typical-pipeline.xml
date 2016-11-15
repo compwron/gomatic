@@ -38,6 +38,7 @@
         <approval type="manual">
           <authorization>
             <role>some_role</role>
+            <user>some_user</user>
           </authorization>
         </approval>
         <environmentvariables>

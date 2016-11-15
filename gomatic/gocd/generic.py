@@ -128,3 +128,21 @@ class ThingWithAuthorizedRoles(object):
         if role not in self.roles:
             Ensurance(self.element).ensure_child('approval').ensure_child('authorization') \
                 .append(ET.fromstring('<role>%s</role>' % role))
+
+
+class ThingWithAuthorizedUsers(object):
+    def __init__(self, element):
+        self.element = element
+
+    @property
+    def users(self):
+        guarded_element = PossiblyMissingElement(self.element)
+        if guarded_element.possibly_missing_child('approval').has_attribute('type', 'manual'):
+            return set([e.text for e in guarded_element.possibly_missing_child('approval').possibly_missing_child('authorization').findall('user')])
+        else:
+            return None
+
+    def ensure_user(self, user):
+        if user not in self.users:
+            Ensurance(self.element).ensure_child('approval').ensure_child('authorization') \
+                .append(ET.fromstring('<user>%s</user>' % user))
